@@ -1,0 +1,26 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+append styles
+    link(rel="stylesheet" href="stylesheets/design.css")
+
+block body
+    +navbar("Colenso Project", "dropdown_menu")
+        +nav_item("/") Home
+            +icon("home")
+        +nav_item("/explore", "active") Explore Database
+            +icon("list-alt")
+        +nav_item("/database") Database
+            +icon("book")
+    .container
+        h1= title
+        .container
+        p Welcome to the #{title}
+
+        p !{data}
+
+
+
+
+
+
+
