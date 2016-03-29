@@ -10,5 +10,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Colenso Project' });
 });
 
-
+router.get("/explore",function(req,res) {
+    res.render('explore', {title: 'Colenso Project '});
+});
 module.exports = router;
