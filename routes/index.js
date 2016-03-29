@@ -22,7 +22,17 @@ router.get("/explore",function(req,res){
     );
 });
 
-
+router.get("/file",function(req,res){
+    client.execute("XQUERY doc('Colenso/" + req.query.filename + "')",
+        function (error, result) {
+            if(error){ console.error(error);}
+            else {
+                var splitlist = result.result.split("\n")
+                res.render('file', { title: 'Colenso Project', data: splitlist });
+            }
+        }
+    );
+});
 
 
 
