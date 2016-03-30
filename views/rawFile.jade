@@ -18,12 +18,13 @@ block body
             a.btn-xl.outline(href='/download') Download
 
         +a-btn("/download") Download
-        +a-btn("rawFile?filename=") View Raw XML File
+        +a-btn("/file") View Readable File
 
         .container
         p Welcome to the #{title}
 
-        p !{data}
+        textarea(id="textArea", style="width: 100%; height: 500px;")
+            p !{data}
 
 
 
