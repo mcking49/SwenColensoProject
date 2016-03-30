@@ -4,16 +4,16 @@ append styles
     link(rel="stylesheet" href="stylesheets/design.css")
 
 block body
-    .navigation
-        +navbar("Colenso Project", "dropdown_menu")
-            +nav_item("/", "active") Home
-                +icon("home")
-            +nav_item("/explore") Explore Database
-                +icon("list-alt")
-            +nav_item("/database") Search Database
-            +icon("book")
-
     .container
-        h1= title
-        .container
-        p Welcome to the #{title}. We have an excellent collection of videos in stock for you.
+        .navigation
+            +navbar("Colenso Project", "dropdown_menu")
+                +nav_item("/", "active") Home
+                    +icon("home")
+                +nav_item("/explore") Explore Database
+                    +icon("list-alt")
+                +nav_item("/database") Search Database
+                    +icon("book")
+
+        .content
+            h1= title
+            p Welcome to the #{title}. We have an excellent collection of videos in stock for you.
