@@ -44,7 +44,47 @@ router.get("/file",function(req,res){
 
 
 router.get('/database', function(req, res) {
-    res.render('database', {title: 'Colenso Project'});
+
+    var tei = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';";
+    if(req.query.databaseSearch){
+        var searchArray = req.query.databaseSearch.split(" ");
+        var queryCondition = "";
+
+        queryCondition += searchArray[0];
+        if(1 < searchArray.length){
+            if(searchArray[1] === "OR"){
+                queryCondition += "' ftor '";
+            }else if(searchArray[1] === "AND"){
+                queryCondition += "' ftand '";
+            }else if(searchArray[1] === "NOT"){
+                queryCondition += "' ftand ftnot '";
+            }
+            else if(searchArray[0] === "NOT"){
+                queryCondition += "' ftand ftnot '";
+            }
+            queryCondition += searchArray[2];
+        }
+
+    }
+
+     var searchQuery = tei + "for $t in (collection('Colenso')[. contains text ' "  + queryCondition +"'])\n" +
+        "return concat('<a href=\"/file?filename=', db:path($t), '\" class=\"searchResult\">', '</a>'," +
+        "'<p class=\"searchResult\">', db:path($t), '</p>')";
+
+    client.execute(searchQuery,
+        function (error, result) {
+            if(error){ console.error(error)}
+            else {
+                if(req.query.databaseSearch == undefined || req.query.databaseSearch == null){
+                    res.render('database', { title: 'Colenso Project', results: " "});
+                }else{
+                   var nResults = (result.result.match(/<\/a>/g) || []).length;
+                    var splitlist = result.result.split("\n")
+                    res.render('database', { title: 'Colenso Project', results: splitlist , nResults : nResults});
+                }
+            }
+        }
+    );
 });
 
 
