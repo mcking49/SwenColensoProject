@@ -4,31 +4,26 @@ append styles
     link(rel="stylesheet" href="stylesheets/design.css")
 
 block body
-    +navbar("Colenso Project", "dropdown_menu")
-        +nav_item("/") Home
-            +icon("home")
-        +nav_item("/explore", "active") Explore Database
-            +icon("list-alt")
-        +nav_item("/database") Database
-            +icon("book")
     .container
-        h1= title
-
-        //.btn-group(role='group', aria-label="...")
-            a.btn-xl.outline(href='/download') Download
-
-        +a-btn("/download") Download
-        +a-btn("/file") View Readable File
-
-        .container
-        p Welcome to the #{title}
-
-        textarea(id="textArea", style="width: 100%; height: 500px;")
-            p !{data}
-
-
-
-
-
-
-
+        .navigation
+            +navbar("Colenso Project", "dropdown_menu")
+                +nav_item("/", "active") Home
+                    +icon("home")
+                +nav_item_dropdown("#")(label="Database")
+                    +nav_item("/explore") Explore
+                        +icon("list-alt")
+                    +nav_item("/database") Search Database
+                        +icon("book")
+        .content
+            h1= title
+            .hr
+                hr
+            br
+            +a-btn("/download") Download
+            +a-btn("javascript:history.back()") Back to Readable
+            br
+            .hr
+                hr
+            br
+            textarea(id="textArea", style="width: 100%; height: 600px;")
+                p !{data}
