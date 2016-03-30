@@ -5,7 +5,8 @@ var basex = require('basex');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 client.execute("OPEN Colenso");
 
-
+// global variable for downloading a file.
+var downloadFilename = "";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -34,6 +35,7 @@ router.get("/file",function(req,res){
             if(error){ console.error(error);}
             else {
                 var splitlist = result.result.split("\n")
+                downloadFilename = req.query.filename;
                 res.render('file', { title: 'Colenso Project', data: splitlist });
             }
         }
@@ -85,9 +87,8 @@ router.get('/database', function(req, res) {
 });
 
 router.get('/download', function(req, res) {
-    var testDL = "Colenso/diary/diary.xml";
     client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
-        "(doc('Colenso/" + testDL + "'))[1]",
+        "(doc('Colenso/" + downloadFilename + "'))[1]",
         function (error, result) {
             if(error){
                 console.error(error);
@@ -101,8 +102,7 @@ router.get('/download', function(req, res) {
                 res.end();
 
             }
-        }
-    );
+        });
 });
 
 module.exports = router;
