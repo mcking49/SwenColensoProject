@@ -3,6 +3,9 @@ var router = express.Router();
 var basex = require('basex');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 client.execute("OPEN Colenso");
+var rawToReadable = "";
+var rawQuery = "";
+var loop = false;
 
 // global variable for downloading a file.
 var downloadFilename = "";
@@ -28,8 +31,8 @@ router.get("/explore",function(req,res){
     );
 });
 
-router.get("/file",function(req,res){
-    client.execute("XQUERY doc('Colenso/" + req.query.filename + "')",
+router.get("/rawToFile",function(req,res){
+    client.execute(rawToReadable,
         function (error, result) {
             if(error){ console.error(error);}
             else {
@@ -41,9 +44,43 @@ router.get("/file",function(req,res){
     );
 });
 
+router.get("/file",function(req,res){
+    if(loop === true){
+        client.execute(rawToReadable,
+            function (error, result) {
+                if(error){ console.error(error);}
+                else {
+                    var splitlist = result.result.split("\n")
+                    downloadFilename = req.query.filename;
+                    loop = true;
+                    res.render('file', { title: 'Colenso Project', data: splitlist });
+                }
+            }
+        );
+    }else {
+        var query = "XQUERY doc('Colenso/" + req.query.filename + "')";
+        rawToReadable = query;
+
+        client.execute(query,
+            function (error, result) {
+                if (error) {
+                    console.error(error);
+                }
+                else {
+                    var splitlist = result.result.split("\n")
+                    downloadFilename = req.query.filename;
+                    loop = true;
+                    res.render('file', {title: 'Colenso Project', data: splitlist});
+                }
+            }
+        );
+    }
+});
+
 router.get("/rawFile",function(req,res){
-    client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
-        "(doc('Colenso/" + downloadFilename + "'))[1]",
+    rawQuery = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
+        "(doc('Colenso/" + downloadFilename + "'))[1]";
+    client.execute(rawQuery,
         function (error, result) {
             if(error){ console.error(error);}
             else {
@@ -84,11 +121,13 @@ router.get('/database', function(req, res) {
                     queryCondition += searchArray[1];
                 }
             }
+        }else{
+            queryCondition += searchArray[0];
         }
     }
     console.log(queryCondition);
 
-     var searchQuery = tei + "for $t in (collection('Colenso')[. contains text ' "  + queryCondition +"'])\n" +
+     var searchQuery = tei + "for $t in (collection('Colenso')[. contains text ' "  + queryCondition +"' using wildcards])\n" +
         "return concat('<a href=\"/file?filename=', db:path($t), '\" class=\"searchResult\">', '</a>'," +
         "'<p class=\"searchResult\">', db:path($t), '</p>')";
 
