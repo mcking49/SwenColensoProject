@@ -13,6 +13,12 @@ block body
             +icon("book")
     .container
         h1= title
+
+        //.btn-group(role='group', aria-label="...")
+            a.btn-xl.outline(href='/download') Download
+
+        +a-btn("/download") Download
+
         .container
         p Welcome to the #{title}
 
