@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-
 var basex = require('basex');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 client.execute("OPEN Colenso");
@@ -42,6 +41,20 @@ router.get("/file",function(req,res){
     );
 });
 
+router.get("/rawFile",function(req,res){
+    client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
+        "(doc('Colenso/" + downloadFilename + "'))[1]",
+        function (error, result) {
+            if(error){ console.error(error);}
+            else {
+                var splitlist = result.result.split("\n")
+                downloadFilename = req.query.filename;
+                res.render('rawFile', { title: 'Colenso Project', data: splitlist });
+            }
+        }
+    );
+});
+
 router.get('/database', function(req, res) {
 
     var tei = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';";
@@ -49,22 +62,31 @@ router.get('/database', function(req, res) {
         var searchArray = req.query.databaseSearch.split(" ");
         var queryCondition = "";
 
-        queryCondition += searchArray[0];
-        if(1 < searchArray.length){
-            if(searchArray[1] === "OR"){
-                queryCondition += "' ftor '";
-            }else if(searchArray[1] === "AND"){
-                queryCondition += "' ftand '";
-            }else if(searchArray[1] === "NOT"){
-                queryCondition += "' ftand ftnot '";
-            }
-            else if(searchArray[0] === "NOT"){
-                queryCondition += "' ftand ftnot '";
-            }
-            queryCondition += searchArray[2];
-        }
 
+        if(1 < searchArray.length){
+            if(searchArray[0] === "NOT") {
+                queryCondition += "' ftand ftnot '";
+                queryCondition += searchArray[1];
+            }else {
+                queryCondition += searchArray[0];
+                if (searchArray[1] === "OR") {
+                    queryCondition += "' ftor '";
+                    queryCondition += searchArray[2];
+                } else if (searchArray[1] === "AND") {
+                    queryCondition += "' ftand '";
+                    queryCondition += searchArray[2];
+                } else if (searchArray[1] === "NOT") {
+                    queryCondition += "' ftand ftnot '";
+                    queryCondition += searchArray[2];
+
+                } else {
+                    queryCondition += " ";
+                    queryCondition += searchArray[1];
+                }
+            }
+        }
     }
+    console.log(queryCondition);
 
      var searchQuery = tei + "for $t in (collection('Colenso')[. contains text ' "  + queryCondition +"'])\n" +
         "return concat('<a href=\"/file?filename=', db:path($t), '\" class=\"searchResult\">', '</a>'," +
