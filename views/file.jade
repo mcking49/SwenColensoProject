@@ -4,30 +4,28 @@ append styles
     link(rel="stylesheet" href="stylesheets/design.css")
 
 block body
-    +navbar("Colenso Project", "dropdown_menu")
-        +nav_item("/") Home
-            +icon("home")
-        +nav_item("/explore", "active") Explore Database
-            +icon("list-alt")
-        +nav_item("/database") Database
-            +icon("book")
     .container
-        h1= title
+        .navigation
+            +navbar("Colenso Project", "dropdown_menu")
+                +nav_item("/") Home
+                    +icon("home")
+                +nav_item_dropdown("#")(label="Database")
+                    +nav_item("/explore") Explore
+                        +icon("list-alt")
+                    +nav_item("/database") Search Database
+                        +icon("book")
+        .content
+            h1= title
+            .hr
+                hr
+            br
+            +a-btn("/download") Download
+            +a-btn("javascript:history.back()") Back
+            +a-btn("rawFile?filename=") Raw File
 
-        //.btn-group(role='group', aria-label="...")
-            a.btn-xl.outline(href='/download') Download
+            br
+            .hr
+                hr
+            br
 
-        +a-btn("/download") Download
-        +a-btn("rawFile?filename=") View Raw XML File
-
-        .container
-        p Welcome to the #{title}
-
-        p !{data}
-
-
-
-
-
-
-
+            p !{data}

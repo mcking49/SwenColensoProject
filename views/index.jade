@@ -9,11 +9,26 @@ block body
             +navbar("Colenso Project", "dropdown_menu")
                 +nav_item("/", "active") Home
                     +icon("home")
-                +nav_item("/explore") Explore Database
-                    +icon("list-alt")
-                +nav_item("/database") Search Database
-                    +icon("book")
+                +nav_item_dropdown("#")(label="Database")
+                    +nav_item("/explore") Explore
+                        +icon("list-alt")
+                    +nav_item("/database") Search Database
+                        +icon("book")
 
         .content
             h1= title
-            p Welcome to the #{title}. We have an excellent collection of videos in stock for you.
+            .hr
+                hr
+            h3 William Colenso (1811 - 1899)
+            br
+            p Controversial, opinionated, insightful and passionate, William Colenso had a keen appreciation of what
+                | it was to be an inhabitant of New Zealand in its earliest incarnation as a world of Maori and Pakeha.
+
+                | Only now, on the bicentenary of his birth can we see Colenso in the round: a talented polymath, at home
+                | crossing the Ruahines, providing Kew Gardens with knowledge of New Zealand plants, or writing and printing
+                | the only published eyewitness account of the signing of the Treaty of Waitangi.
+
+            p The Colenso Society, Victoria University of Wellington and MTG Hawke's Bay are delighted to announce the
+                | establishment of the Colenso Project. This exciting new initiative seeks to build on the blossoming
+                | national and international interest in William Colenso’s life and ideas as the result of the William
+                | Colenso Bicentenary Celebrations in Hawke’s Bay in 2011, and a body of new publications and research

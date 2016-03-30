@@ -4,31 +4,26 @@ append styles
     link(rel="stylesheet" href="stylesheets/design.css")
 
 block body
-    +navbar("Colenso Project", "dropdown_menu")
-        +nav_item("/") Home
-            +icon("home")
-        +nav_item("/explore") Explore Database
-            +icon("list-alt")
-        +nav_item("/database", "active") Database
-            +icon("book")
     .container
-        h1= title
-        .container
-        p Welcome to the #{title}
-        .container
+        .navigation
+            +navbar("Colenso Project", "dropdown_menu")
+                +nav_item("/") Home
+                    +icon("home")
+                +nav_item_dropdown("#")(label="Database")
+                    +nav_item("/explore") Explore
+                        +icon("list-alt")
+                    +nav_item("/database", "active") Search Database
+                        +icon("book")
+        .content
+            h1= title
+            .hr
+                hr
             form(name="query", action="/database", method="get")
-                +input("text","query","Search", "",name="databaseSearch")
+                +input("text","query","Search Colenso database", "",name="databaseSearch")
                 +submit("Search")
-
-            if nResults > 0
-                +label-success(nResults + " results found")
-            else
-                +label-danger(nResults + " results found")
-            p !{results}
-
-
-
-
-
-
-
+                br
+                .hr
+                    hr
+                br
+                each doc in results
+                    p: a(href = "/file?filename=/" + doc) !{doc}
