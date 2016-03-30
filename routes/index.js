@@ -37,4 +37,17 @@ router.get("/file",function(req,res){
 
 
 
+
+
+
+
+
+
+router.get('/database', function(req, res) {
+    res.render('database', {title: 'Colenso Project'});
+});
+
+
+
+
 module.exports = router;
